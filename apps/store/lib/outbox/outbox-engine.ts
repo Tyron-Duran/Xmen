@@ -38,10 +38,13 @@ export interface CircuitState {
 
 const DEMO_MODE = process.env.DEMO_MODE === 'true';
 
-// Spacing in milliseconds (in DEMO_MODE: 10s, 20s, 30s, 40s)
+// Bounded retry policy: up to 3 attempts with exponential backoff
+export const MAX_OUTBOX_ATTEMPTS = 3;
+
+// Exponential backoff intervals (in DEMO_MODE: 10s, 20s, 40s)
 const RETRY_INTERVALS_MS = DEMO_MODE
-  ? [10_000, 20_000, 30_000, 40_000]
-  : [60_000, 300_000, 900_000, 3_600_000];
+  ? [10_000, 20_000, 40_000]
+  : [60_000, 300_000, 900_000];
 
 export class OutboxEngine {
   private outbox: Map<string, OutboxRow> = new Map();
@@ -139,7 +142,7 @@ export class OutboxEngine {
       // Non-2xx response from partner
       const isPermanent = [400, 401, 403, 404, 409, 422].includes(response.status);
 
-      if (isPermanent || row.attempts >= 5) {
+      if (isPermanent || row.attempts >= MAX_OUTBOX_ATTEMPTS) {
         row.status = 'failed';
         this.recordFailure();
         this.moveToFailedQueue(row, `HTTP ${response.status} Permanent Error or Max Retries Exceeded`);
@@ -153,7 +156,7 @@ export class OutboxEngine {
     } catch (networkErr: any) {
       this.recordFailure();
 
-      if (row.attempts >= 5) {
+      if (row.attempts >= MAX_OUTBOX_ATTEMPTS) {
         row.status = 'failed';
         this.moveToFailedQueue(row, networkErr.message || 'Network delivery failure');
         return { delivered: false, error: networkErr };

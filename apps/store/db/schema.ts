@@ -258,3 +258,32 @@ export const mailLog = pgTable('mail_log', {
   status: text('status').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
 });
+
+// Explicit PostgreSQL Authorization Role Mapping Tables (RBAC)
+export const roles = pgTable('roles', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull().unique(), // 'customer', 'store_admin'
+  description: text('description'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
+});
+
+export const permissions = pgTable('permissions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  code: text('code').notNull().unique(), // 'orders:create', 'orders:read_all', 'feedback:moderate'
+  description: text('description'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
+});
+
+export const rolePermissions = pgTable('role_permissions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  roleId: uuid('role_id').references(() => roles.id).notNull(),
+  permissionId: uuid('permission_id').references(() => permissions.id).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
+});
+
+export const userRoleMappings = pgTable('user_role_mappings', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id).notNull(),
+  roleId: uuid('role_id').references(() => roles.id).notNull(),
+  assignedAt: timestamp('assigned_at', { withTimezone: true }).notNull().defaultNow()
+});

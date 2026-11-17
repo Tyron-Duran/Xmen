@@ -69,4 +69,30 @@ export function createLogger(name: string, destination?: pino.DestinationStream)
 }
 
 export const logger = createLogger('prototype');
+
+export interface AuditLogEntry {
+  actorId: string;
+  actorRole: string;
+  action: string;
+  entity: string;
+  entityId: string;
+  correlationId: string;
+  outcome: 'success' | 'failure';
+  metadata?: Record<string, any>;
+}
+
+export function logAuditEvent(entry: AuditLogEntry) {
+  logger.info({
+    audit: true,
+    actorId: entry.actorId,
+    actorRole: entry.actorRole,
+    action: entry.action,
+    entity: entry.entity,
+    entityId: entry.entityId,
+    correlationId: entry.correlationId,
+    outcome: entry.outcome,
+    metadata: entry.metadata
+  }, `AUDIT: [${entry.action}] on ${entry.entity}:${entry.entityId} by ${entry.actorRole}:${entry.actorId} - ${entry.outcome.toUpperCase()}`);
+}
+
 export default logger;

@@ -20,6 +20,9 @@ This register documents all 12 interface operations governed by OpenAPI 3.1 spec
 | **OP-10** | A $\to$ B | `POST /api/v1/installations/{jobNumber}/feedback` | `feedback:write` | outbox | 201, 200 (replay) | MUST |
 | **OP-11** | A $\to$ B | `PATCH /api/v1/installations/{jobNumber}/feedback` | `feedback:write` | outbox | 200 | SHOULD |
 | **OP-12** | B $\to$ A | `GET /api/v1/stock/availability` | `stock:read` | on-demand | 200 | SHOULD |
+| **OP-13** | Tech $\to$ B | `POST /api/v1/jobs/{jobNumber}/proof-of-delivery` | `jobs:upload_pod` | on-demand | 201 | MUST |
+| **AUTH-01** | Client $\to$ B | `POST /api/oauth/token` | public / client_credentials | on-demand | 200 | MUST |
+| **DRAIN-01** | Cron $\to$ A | `POST /api/internal/drain` | `CRON_SECRET_STORE` | scheduled | 200 | MUST |
 
 ---
 

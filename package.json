@@ -5,10 +5,11 @@
   "description": "GoodHand Store + Field Service Integration Prototype",
   "scripts": {
     "clone-site": "node scripts/clone-site.mjs",
+    "dev": "pnpm -r --filter=./apps/* --parallel dev",
     "contract:lint": "pnpm --filter @prototype/contract lint",
     "contract:generate": "pnpm --filter @prototype/contract generate",
     "build": "pnpm -r --filter=./apps/* build",
-    "test": "node_modules\\.pnpm\\node_modules\\.bin\\vitest.CMD run",
+    "test": "vitest run",
     "lint": "pnpm -r lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,yaml}\""
   },

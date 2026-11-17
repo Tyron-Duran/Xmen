@@ -14,15 +14,21 @@
 | Phase 7 | Rehearsal & final demo check | done |
 
 ## Session Details
-- **Last Completed Item:** Phase 7 Rehearsal & Final Verification complete:
-  - `pnpm demo:reset` ran twice in a row cleanly and idempotently with 0 errors.
-  - Spectral OpenAPI linting clean: 0 errors on `packages/contract/openapi.yaml`.
-  - Generated schemas verified: 0 diff against committed TypeScript/Zod models.
-  - Vitest test suite verified: **34/34 passing tests** across all 6 test files.
-  - Architectural contract checklist: **16/16 clauses verified and passing**.
-  - Production Next.js build verified: **38 routes compiled with 0 errors** (21 in Store, 17 in FSM).
-  - Codebase audit: 0 TODOs, 0 FIXMEs, no secrets in repo, no PII leakage in Pino structured logs.
-  - Prototype safety banners active and search engine `noindex, nofollow` confirmed on all layouts.
+- **Last Completed Item:** Enhanced feature suite complete:
+  - Clerk JWT verification support added alongside Jose JWT in both apps.
+  - PostgreSQL RBAC role-permission mapping tables (`roles`, `permissions`, `role_permissions`, `user_role_mappings`) added to Drizzle schema.
+  - HTTPS enforcement and HSTS security headers middleware active.
+  - Pydantic v2 schemas (`packages/contract/schemas.py`) and strict Zod models with min/max string limits and extra field forbidding.
+  - Proof of Delivery (PoD) photo upload endpoint with async handling and strict 5 MB cap (`apps/fsm/app/api/v1/jobs/[jobNumber]/proof-of-delivery`).
+  - Bounded outbox retry policy with exponential backoff up to 3 attempts (`MAX_OUTBOX_ATTEMPTS = 3`).
+  - Standardized JSON audit logging helper (`logAuditEvent`) in `@prototype/logger`.
+  - API versioning strategy document (`docs/api-versioning.md`) with backward compatibility guidelines.
+  - Traceability matrix connecting business pain points to REST endpoints (`docs/traceability-matrix.md`).
+  - Integration Point Register updated in `docs/api-register.md`.
+  - Offline driver workflows in technician mobile app with network detection and offline queue sync.
+  - Performance SLA test asserting < 200 ms latency for non-file API calls (`apps/fsm/test/performance.test.ts`).
+  - All 41 unit, contract, SLA, and interface tests passing cleanly.
+  - Next.js production build compiling 40 routes with 0 errors.
 - **Current Status:** Feature complete, hardened, and verified. Ready for human rehearsal recording (H7) and live Vercel/Neon linking (H1-H5).
 - **Assumptions Added:**
   - See `docs/assumptions.md`.

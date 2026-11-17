@@ -241,3 +241,45 @@ export const mailLog = pgTable('mail_log', {
   status: text('status').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
 });
+
+export const proofOfDelivery = pgTable('proof_of_delivery', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  jobId: uuid('job_id').references(() => jobs.id).notNull(),
+  fileName: text('file_name').notNull(),
+  fileSizeBytes: integer('file_size_bytes').notNull(),
+  mimeType: text('mime_type').notNull(),
+  storagePath: text('storage_path').notNull(),
+  fileUrl: text('file_url').notNull(),
+  notes: text('notes'),
+  uploadedBy: text('uploaded_by'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
+});
+
+// Explicit PostgreSQL Authorization Role Mapping Tables (RBAC)
+export const roles = pgTable('roles', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull().unique(), // 'admin', 'dispatcher', 'technician'
+  description: text('description'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
+});
+
+export const permissions = pgTable('permissions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  code: text('code').notNull().unique(), // e.g. 'jobs:assign', 'installations:create', 'feedback:read'
+  description: text('description'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
+});
+
+export const rolePermissions = pgTable('role_permissions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  roleId: uuid('role_id').references(() => roles.id).notNull(),
+  permissionId: uuid('permission_id').references(() => permissions.id).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
+});
+
+export const userRoleMappings = pgTable('user_role_mappings', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: uuid('user_id').references(() => users.id).notNull(),
+  roleId: uuid('role_id').references(() => roles.id).notNull(),
+  assignedAt: timestamp('assigned_at', { withTimezone: true }).notNull().defaultNow()
+});

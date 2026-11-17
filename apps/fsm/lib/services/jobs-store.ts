@@ -118,6 +118,17 @@ class JobsStore {
     this.seedInitialData();
   }
 
+  public resetDemo(): void {
+    this.jobs.clear();
+    this.appointments = [];
+    this.processedMessages.clear();
+    this.outboxMessages = [];
+    this.technicianFeedbacks.clear();
+    this.followups = [];
+    this.jobCounter = 1;
+    this.seedInitialData();
+  }
+
   private seedInitialData() {
     // Initial active seed job
     const initialJob: StoredJob = {

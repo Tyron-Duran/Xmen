@@ -204,3 +204,13 @@ export const StandardErrorPayloadSchema = z.object({
   error: ErrorDetailSchema
 }).strict();
 export type StandardErrorPayload = z.infer<typeof StandardErrorPayloadSchema>;
+
+export const ProofOfDeliverySchema = z.object({
+  jobNumber: z.string().regex(/^JOB-[0-9]{8}-[0-9]{6}$/, 'Invalid job number format'),
+  fileName: z.string().min(1).max(255),
+  fileSizeBytes: z.number().int().min(1).max(5 * 1024 * 1024, 'File size exceeds 5 MB cap'),
+  mimeType: z.enum(['image/jpeg', 'image/png', 'image/webp']),
+  storagePath: z.string().max(500).optional(),
+  notes: z.string().max(500).optional()
+}).strict();
+export type ProofOfDelivery = z.infer<typeof ProofOfDeliverySchema>;

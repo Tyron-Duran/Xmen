@@ -34,6 +34,12 @@ export class StockLedger {
     this.seedInventory();
   }
 
+  public reset() {
+    this.inventory.clear();
+    this.movements.clear();
+    this.seedInventory();
+  }
+
   public seedInventory() {
     // Default 50 units for each SKU
     const skus = [
